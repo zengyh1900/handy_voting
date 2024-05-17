@@ -1,0 +1,48 @@
+body {
+  /* Background pattern from Toptal Subtle Patterns */
+  background-image: url(/static/img/background.png);
+  background-repeat: repeat;
+}
+
+.model-img {
+  display: inline-block;
+  margin: 10px 0 0 0;
+  text-align: center!important;
+}
+
+#model-imgs {
+  text-align: center;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+}
+
+#tips-popup {
+  text-align: left;
+  min-width: 500px;
+}
+
+.main-container {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  margin-left: -480px;
+  margin-top: -360px;
+  width: 960px;
+  min-height: 720px;
+  padding-top: 30px;
+  padding-bottom: 0;
+  padding-left: 50px;
+  padding-right: 50px;
+  font-size: 1.2rem;
+  background-color: #f8f8f8;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+  text-align: center;
+}
+
+.fade-enter-active, .fade-leave-active {
+  transition: opacity .5s;
+}
+.fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */ {
+  opacity: 0;
+}

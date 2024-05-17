@@ -1,0 +1,10 @@
+certifi==2018.8.24
+click==8.1.7
+Flask==3.0.3
+Flask-Script==2.0.6
+Flask-SQLAlchemy==3.1.1
+itsdangerous==2.2.0
+Jinja2==3.1.4
+MarkupSafe==2.1.5
+SQLAlchemy==2.0.30
+Werkzeug==3.0.3

@@ -1,0 +1,34 @@
+
+# you need to set the root_path to handy_voting
+root_path: './'
+
+# setup details about user study
+name: 'user study'
+description: 'This is a user study to evaluate the performance of the models'
+
+
+# you need to speficy the models
+models: [
+    {
+        name: 'a',
+        type: 'groundtruth',
+    },
+    {
+        name: 'b',
+        type: 'target',
+    },
+    {
+        name: 'c',
+        type: 'baseline',
+    },
+
+]
+
+
+# DO NOT change the following
+APP_SETTINGS:
+    SQLALCHEMY_DATABASE_URI: 'sqlite:///${root_path}/../imgvoter.db'
+    SECRET_KEY: 'y8nh0ng-U6q97dp'
+    IMG_DATA_DIR: 'static/data/'
+    # number of models pick from baselines for comparison
+    NUM_MODELS: 1

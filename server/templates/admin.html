@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Admin</title>
+
+  <link rel="stylesheet" href="static/Semantic-UI-CSS/semantic.min.css">
+  <link rel="stylesheet" href="static/css/main.css">
+</head>
+
+<body>
+
+  <div class="main-container">
+    <h1>Admin</h1>
+      <table class="ui celled table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Role</th>
+            <th>Vote Count</th>
+            <th>Shown Count</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for m in models %}
+          <tr>
+            <td data-label="ID">{{m.id}}</td>
+            <td data-label="Name">{{m.name}}</td>
+            <td data-label="Role">{{m.type}}</td>
+            <td data-label="Vote Count">{{m.vote_count}}</td>
+            <td data-label="Shown Count">{{m.shown_count}}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/axios@0.12.0/dist/axios.min.js"></script>
+
+  <script
+    src="https://code.jquery.com/jquery-3.1.1.min.js"
+    integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
+    crossorigin="anonymous"></script>
+  <script src="static/Semantic-UI-CSS/semantic.min.js"></script>
+
+</body>
+
+</html>
