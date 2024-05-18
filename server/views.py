@@ -5,7 +5,7 @@ import random
 from flask import abort, jsonify, render_template, request, session
 from omegaconf import OmegaConf
 
-from . import app, config, db
+from . import app, db
 from .models import Model
 from .models.model import ModelRole
 
@@ -33,7 +33,7 @@ def getimages():
         {
             "id": i,
             "img": os.path.join(config.APP_SETTINGS["IMG_DATA_DIR"], m.name, img_filename),
-            "isgroundtruth": m.type == ModelRole.groundtruth,
+            "isreference": m.type == ModelRole.reference,
         }
         for i, m in enumerate(selected_models)
     ]
@@ -52,7 +52,7 @@ def vote():
         abort(400)
     choice = selected_models[choice]
     model = Model.query.get(choice)
-    if model.type == ModelRole.groundtruth:
+    if model.type == ModelRole.reference:
         abort(400)
     model.vote_count += 1
     db.session.add(model)
@@ -71,10 +71,10 @@ def admin():
 
 
 def choose_models():
-    groundtruth_models = Model.groundtruth_models()
+    reference_models = Model.reference_models()
     target_models = Model.target_models()
     baseline_models = Model.baseline_models()
     random.shuffle(baseline_models)
     selected_models = target_models + baseline_models[: config.APP_SETTINGS["NUM_MODELS"]]
     random.shuffle(selected_models)
-    return groundtruth_models + selected_models
+    return reference_models + selected_models

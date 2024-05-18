@@ -1,7 +1,11 @@
-# 🔍 Handy Voting (for user study)
+# 🔍 Handy Voting: Choose the Best One (for user study)
 
 This project is used for deploying a simple server for a quick user study.
+Currently, we support image, GIF, and video comparison.
 
+
+## News
+* [5/18/2024] Released. Support image, GIF, and video comparison.
 
 
 
@@ -13,18 +17,15 @@ This website has two pages, one being the `index` page, and the other the `admin
 
 ![index.page](assets/user.jpg)
 
-The index page is for comparing and voting for results.
+The index page is for comparing and voting for results. The user is shown a set of results from different models and is asked to vote for the best one. The order shuffles in each trail. The user can vote for the best one by clicking the result.
 
-The number of Baseline models to be shown can be set as `NUM_MODELS` in `server/config.py`.
+You can set the details of models for comparison in `config.yaml`. There are three kinds of models:
+| Type       | Description                                                               | Optional | Always Shown | Voting Allowed |
+|------------|---------------------------------------------------------------------------|----------|--------------|----------------|
+| `reference`| It is usually used as a reference, e.g., input/groundtruth. | Yes      | Yes          | No             |
+| `target`   | It is usually used as your model. | Yes      | Yes          | Yes            |
+| `baseline` | Only a subset of this kind of models are randomly shown to the user in each turn. The number of baseline models to be shown can be set as `NUM_MODELS` in `config.yaml`. | Yes      | No           | Yes            |
 
-In each turn, the set of images shown to the user are from:
-
-* ALL Groundtruth models.
-* ALL Target models.
-* `NUM_MODELS` Baseline models randomly chosen from all Baseline models.
-
-Only Target (your model) and Baseline models are available for voting.
-The order shuffles in each trail.
 
 ### Admin Page
 
@@ -39,7 +40,7 @@ Each `Model` has these properties:
 
 * Id.
 * Name. Used in looking for the images.
-* Type. Can be `Groundtruth`, `Target`, or `Baseline`.
+* Type. Can be `reference`, `target`, or `baseline`.
 * Vote Count. The count of votes this model has received.
 * Shown Count. That's how many times the model is shown to the user.
 
@@ -74,7 +75,7 @@ python create_models.py
 ```bash
 export FLASK_APP=server
 export FLASK_ENV=production
-flask run --host=0.0.0.0
+flask run --host=0.0.0.0 --port=5050
 ```
 
 You can now access the index page at `http://localhost:5000`
