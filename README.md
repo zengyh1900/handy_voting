@@ -5,6 +5,8 @@ Currently, we support image, GIF, and video comparison.
 
 
 ## News
+* [5/19/2024] Support local comparisons (images/gif) in html.
+* [5/19/2024] Support counting voted users in admin page.
 * [5/18/2024] Released. Support image, GIF, and video comparison.
 
 
