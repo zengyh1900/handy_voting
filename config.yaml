@@ -34,5 +34,5 @@ APP_SETTINGS:
     # [can be changed] number of models pick from baselines for comparison
     NUM_MODELS: 1
 
-    DATA_DIR: 'static/data/image'
-    DATA_TYPE: 'image'
+    DATA_DIR: 'static/data/video'
+    DATA_TYPE: 'video'

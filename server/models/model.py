@@ -30,3 +30,12 @@ class Model(db.Model):
 
     def __repr__(self):
         return "<Model #%d[%s], votes = %d, shown = %d>" % (self.id, self.name, self.vote_count, self.shown_count)
+
+
+class User(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    userid = db.Column(db.String(80), unique=True, nullable=False)
+    votes = db.Column(db.Integer, nullable=False, default=0)
+
+    def __repr__(self):
+        return "<User #%d[%s], admin = %r>" % (self.id, self.userid, self.votes)

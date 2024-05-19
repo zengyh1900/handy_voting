@@ -6,8 +6,7 @@ from flask import abort, jsonify, make_response, render_template, request, sessi
 from omegaconf import OmegaConf
 
 from . import app, db
-from .models import Model
-from .models.model import ModelRole
+from .models import Model, ModelRole, User
 
 
 config = OmegaConf.load("./config.yaml")
@@ -60,6 +59,8 @@ def vote():
     model = Model.query.get(choice)
     if model.type == ModelRole.reference:
         abort(400)
+
+    # update the vote count and shown count
     model.vote_count += 1
     db.session.add(model)
     for id in selected_models:
@@ -67,13 +68,27 @@ def vote():
         model.shown_count += 1
         db.session.add(model)
     db.session.commit()
+
+    # update the users
+    user_id = request.remote_addr
+    try:
+        user = User.query.filter_by(userid=user_id).first()
+        if user:
+            user.votes += 1
+        else:
+            user = User(userid=user_id, votes=1)
+        db.session.add(user)
+        db.session.commit()
+    except Exception as e:
+        print(e)
     return jsonify({"status": "ok"}), 200
 
 
 @app.route("/admin")
 def admin():
     all_models = Model.query.all()
-    return render_template("admin.html", models=all_models)
+    voted_users = User.query.all()
+    return render_template("admin.html", models=all_models, voted_users=len(voted_users))
 
 
 def choose_models():
