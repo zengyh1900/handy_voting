@@ -2,7 +2,7 @@ import os
 import os.path
 import random
 
-from flask import abort, jsonify, render_template, request, session
+from flask import abort, jsonify, make_response, render_template, request, session
 from omegaconf import OmegaConf
 
 from . import app, db
@@ -14,14 +14,20 @@ config = OmegaConf.load("./config.yaml")
 
 root_path = os.path.dirname(__file__)
 
-IMG_LIST = sorted(os.listdir(os.path.join(root_path, config.APP_SETTINGS.IMG_DATA_DIR, config.models[0].name)))
+IMG_LIST = sorted(os.listdir(os.path.join(root_path, config.APP_SETTINGS.DATA_DIR, config.models[0].name)))
 
 
 @app.route("/")
 def display():
-    with open(os.path.join(root_path, "templates/display.html"), "r") as f:
-        return f.read()
-    # return render_template(os.path.join(root_path, 'templates/display.html'), title = config.name)
+    assert config.title is not None, "set the title of your user study in the config.yml"
+    assert config.guideline is not None, "set the guideline of your user study in the config.yml"
+
+    html_file = config.APP_SETTINGS.DATA_TYPE + ".html"
+    response = render_template(html_file, title=config.title, guideline=config.guideline)
+    response = make_response(response)
+    response.headers["Content-Type"] = "text/html"
+    response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
+    return response
 
 
 @app.route("/getimages")
@@ -32,7 +38,7 @@ def getimages():
     res = [
         {
             "id": i,
-            "img": os.path.join(config.APP_SETTINGS["IMG_DATA_DIR"], m.name, img_filename),
+            "img": os.path.join(config.APP_SETTINGS["DATA_DIR"], m.name, img_filename),
             "isreference": m.type == ModelRole.reference,
         }
         for i, m in enumerate(selected_models)
