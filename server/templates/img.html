@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>User Study</title>
+
+    <link rel="stylesheet" href="static/Semantic-UI-CSS/semantic.min.css">
+    <link rel="stylesheet" href="static/css/main.css">
+</head>
+
+<body>
+
+    <div class="main-container">
+        <h1>User Study</h1>
+        <p id="tips-icon">
+            <a><i class="ui blue question circle outline large icon"></i></a>
+        </p>
+        <div id="tips-popup" class="ui popup trainsition hidden">
+            <div class="header">Guideline</div>
+            <div class="content">
+                <ol>
+                    <li>Choose the one that you think is most realistic and reasonable.</li>
+                </ol>
+            </div>
+        </div>
+        <div id="app">
+            <div class="ui active centered loader" v-show="loading" key="loader"></div>
+            <transition appear name="fade">
+                <div id="model-imgs" class="ui centered grid" v-show="!loading" key="images">
+                    <div class="model-img ui six wide column" v-for="item in images">
+                        <!-- <input type="radio" :id="item.id" :value="item.id" v-model="selectedModel"> -->
+                        <div class="ui blurring dimmable image" v-show="!item.isreference">
+                            <div class="ui dimmer">
+                                <div class="content">
+                                    <div>
+                                        <button v-on:click="sendVote(item.id)"
+                                            class="ui inverted button">Select</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <video :src="item.img" class="ui image" />
+                        </div>
+                        <div class="ui blurring dimmable image" v-show="item.isreference">
+                            <div class="ui dimmer">
+                                <div class="content">
+                                    <div>
+                                        <p>Reference</p>
+                                        <!-- <div class="ui active centered inline loader" v-if="loading""></div> -->
+                                    </div>
+                                </div>
+                            </div>
+                            <a class="ui blue right corner label"><i class="info icon"></i></a>
+                            <video :src="item.img" class="ui image" />
+                        </div>
+                    </div>
+                </div>
+            </transition>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios@0.12.0/dist/axios.min.js"></script>
+
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"
+        integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
+    <script src="static/Semantic-UI-CSS/semantic.min.js"></script>
+
+    <script>
+        var app = new Vue({
+            el: '#app',
+            data() {
+                return {
+                    loading: true,
+                    images: [],
+                    first: true,
+                }
+            },
+            created() {
+                this.getImages()
+                $('#tips-icon').popup({ 'on': 'hover', 'position': 'top center' })
+            },
+            methods: {
+                getImages: function () {
+                    this.loading = true
+                    var vm = this
+                    axios.get('/getimages')
+                        .then(function (response) {
+                            vm.images = response.data.imgs
+                            if (vm.first) {
+                                setTimeout(function () { $('.ui.dimmable').dimmer({ on: 'hover' }) }, 500)
+                                vm.first = false
+                            }
+                            vm.loading = false
+                        })
+                        .catch(function (error) {
+                            vm.images = []
+                            console.log(error)
+                        })
+                },
+                sendVote: function (choice) {
+                    this.loading = true
+                    var vm = this
+                    axios.post('/vote', {
+                        choice: choice
+                    })
+                        .then(function (response) {
+                            vm.getImages()
+                        })
+                        .catch(function (error) {
+                            alert(error)
+                        })
+                },
+            },
+        });
+    </script>
+</body>
+
+</html>

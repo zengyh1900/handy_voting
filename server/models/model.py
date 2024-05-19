@@ -4,7 +4,7 @@ from .. import db
 
 
 class ModelRole(enum.Enum):
-    groundtruth = 0
+    reference = 0
     target = 1
     baseline = 2
 
@@ -17,8 +17,8 @@ class Model(db.Model):
     type = db.Column(db.Enum(ModelRole), nullable=False)
 
     @staticmethod
-    def groundtruth_models():
-        return Model.query.filter_by(type=ModelRole.groundtruth).order_by(Model.id.asc()).all()
+    def reference_models():
+        return Model.query.filter_by(type=ModelRole.reference).order_by(Model.id.asc()).all()
 
     @staticmethod
     def target_models():

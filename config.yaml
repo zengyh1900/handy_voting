@@ -7,12 +7,12 @@ name: 'user study'
 description: 'This is a user study to evaluate the performance of the models'
 
 
-# you need to speficy the models
+# you need to specify the models
 models: [
-    {
-        name: 'a',
-        type: 'groundtruth',
-    },
+    # {
+    #     name: 'a',
+    #     type: 'reference',
+    # },
     {
         name: 'b',
         type: 'target',
