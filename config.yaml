@@ -3,16 +3,18 @@
 root_path: './'
 
 # setup details about user study
-name: 'user study'
-description: 'This is a user study to evaluate the performance of the models'
-
+title: 'user study for text-to-image generation'
+guideline: [
+  'choose the image you think is the best matched one to the prompt',
+  'choose the image you think has the best quality',
+]
 
 # you need to specify the models
 models: [
-    # {
-    #     name: 'a',
-    #     type: 'reference',
-    # },
+    {
+        name: 'a',
+        type: 'reference',
+    },
     {
         name: 'b',
         type: 'target',
@@ -21,14 +23,16 @@ models: [
         name: 'c',
         type: 'baseline',
     },
-
 ]
 
 
-# DO NOT change the following
 APP_SETTINGS:
+    # DO NOT change the following
     SQLALCHEMY_DATABASE_URI: 'sqlite:///${root_path}/../imgvoter.db'
     SECRET_KEY: 'y8nh0ng-U6q97dp'
-    IMG_DATA_DIR: 'static/data/'
-    # number of models pick from baselines for comparison
+
+    # [can be changed] number of models pick from baselines for comparison
     NUM_MODELS: 1
+
+    DATA_DIR: 'static/data/image'
+    DATA_TYPE: 'image'

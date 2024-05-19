@@ -61,8 +61,9 @@ pip install -r requirements.txt
 
 1. Link all the results used for user study to the static folder,
 ```bash
-ln -s /path/to/the/results/of/modelA server/data/modelA
+ln -s /path/to/the/results/of/modelA server/data/images/modelA
 ```
+Note that, you can also put the results under `videos` or any other subfolders under `data`. Then, you can set the `DATA_DIR` in `config.yaml` to the corresponding subfolder.
 
 2. Setup your configuration in `config.yaml`.
 
