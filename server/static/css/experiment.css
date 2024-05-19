@@ -1,0 +1,34 @@
+body, textarea, select, input, button {
+    font-family: Verdana, Tahoma, Arial, sans-serif;
+}
+
+.lea-img {
+    display: inline-block;
+    margin: 5px 5px 5px 5px;
+}
+
+.lea-img-link {
+    text-decoration: none;
+}
+
+.lea-img-group {
+    display: block;
+    margin: 10px 10px 10px 10px;
+    padding: 5px 5px 5px 5px;
+    border: 2px solid #ccc;
+    border-radius: 5px;
+    text-align: center;
+}
+
+.lea-title-group {
+    display: block;
+    margin: 10px 10px 10px 10px;
+    padding: 5px 5px 5px 5px;
+    text-align: center;
+}
+
+.lea-title {
+    display: inline-block;
+    margin: 5px 5px 5px 5px;
+    font-size: 1.3em;
+}

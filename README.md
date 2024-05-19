@@ -110,5 +110,22 @@ And, your directory hierarchy should look like:
 ```
 
 
+## Experiments
+Before conducting a user study, you may also want to check all the results locally.
+Then you can run with,
+```shell
+python check.py --src path/to/modelA path/to/modelB path/to/modelB --name output
+```
+
+
+Then, setup a simple server by running,
+```shell
+python -m http.server 8000 --bind 0.0.0.0
+```
+
+Then, open your browser and visit `http://localhost:8000/check/output.html` to check the results.
+You may find 404 error when you check the results, which is often caused by setting wrong path. I suggest all the results share the same parent directory.
+
+
 ## Credit
 original from [@leasunhy](https://github.com/leasunhy)

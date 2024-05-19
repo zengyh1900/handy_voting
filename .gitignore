@@ -1,6 +1,7 @@
 *.db
 __pycache__
 server/static/data
+*.html
 *.png
 *.gif
 *.GIF
