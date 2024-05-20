@@ -22,6 +22,9 @@ def display():
     assert config.guideline is not None, "set the guideline of your user study in the config.yml"
 
     html_file = config.APP_SETTINGS.DATA_TYPE + ".html"
+    # if config.metrics is not None and len(config.metrics) > 1:
+    #     response = render_template(html_file, title=config.title, guideline=config.guideline, metrics=config.metrics)
+    # else:
     response = render_template(html_file, title=config.title, guideline=config.guideline)
     response = make_response(response)
     response.headers["Content-Type"] = "text/html"
@@ -42,32 +45,48 @@ def getimages():
         }
         for i, m in enumerate(selected_models)
     ]
-    return jsonify({"imgs": res})
+    metrics = [{"id": i, "name": name} for i, name in enumerate(config.metrics)]
+    return jsonify(
+        {
+            "imgs": res,
+            "metrics": metrics,
+        }
+    )
 
 
 @app.route("/vote", methods=["POST"])
 def vote():
-    choice = 0
+    choices = 0
     try:
-        choice = int(request.json["choice"])
+        choices = list(request.json["choice"])
     except ValueError:
         abort(400)
-    selected_models = session["models"]
-    if choice >= len(selected_models):
-        abort(400)
-    choice = selected_models[choice]
-    model = Model.query.get(choice)
-    if model.type == ModelRole.reference:
-        abort(400)
 
-    # update the vote count and shown count
-    model.vote_count += 1
-    db.session.add(model)
-    for id in selected_models:
-        model = Model.query.get(id)
-        model.shown_count += 1
+    selected_models = session["models"]
+    # if choices >= len(selected_models):
+    #     abort(400)
+
+    for i, c in enumerate(choices):
+        c = int(c)
+        choice = selected_models[c]
+        model = Model.query.get(choice)
+        print(i, c, config.metrics[i], model.name)
+        if model.type == ModelRole.reference:
+            abort(400)
+
+        # update the vote count and shown count
+        value = model.vote_count
+        value[config.metrics[i]] += 1
+        model.vote_count = value
         db.session.add(model)
-    db.session.commit()
+        for id in selected_models:
+            model = Model.query.get(id)
+            value = model.shown_count
+            value[config.metrics[i]] += 1
+            model.shown_count = value
+            db.session.add(model)
+        db.session.commit()
+        # print(model.shown_count, model.vote_count)
 
     # update the users
     user_id = request.remote_addr
@@ -81,6 +100,7 @@ def vote():
         db.session.commit()
     except Exception as e:
         print(e)
+
     return jsonify({"status": "ok"}), 200
 
 
@@ -88,7 +108,7 @@ def vote():
 def admin():
     all_models = Model.query.all()
     voted_users = User.query.all()
-    return render_template("admin.html", models=all_models, voted_users=len(voted_users))
+    return render_template("admin.html", models=all_models, metrics=config.metrics, voted_users=len(voted_users))
 
 
 def choose_models():

@@ -22,8 +22,10 @@
             <th>ID</th>
             <th>Name</th>
             <th>Role</th>
-            <th>Vote Count</th>
-            <th>Shown Count</th>
+            {% for me in metrics %}
+            <th>vote {{me}}</th>
+            <th>Shown {{me}}</th>
+            {% endfor %}
           </tr>
         </thead>
         <tbody>
@@ -32,8 +34,24 @@
             <td data-label="ID">{{m.id}}</td>
             <td data-label="Name">{{m.name}}</td>
             <td data-label="Role">{{m.type}}</td>
-            <td data-label="Vote Count">{{m.vote_count}}</td>
-            <td data-label="Shown Count">{{m.shown_count}}</td>
+            {% for key in m.vote_count.keys() %}
+            <td>
+                {% if key in m.vote_count %}
+                    {{ m.vote_count[key] }}
+                {% else %}
+                    N/A
+                {% endif %}
+            </td>
+            <td>
+                {% if key in m.shown_count %}
+                    {{ m.shown_count[key] }}
+                {% else %}
+                    N/A
+                {% endif %}
+            </td>
+            {% endfor %}
+
+
           </tr>
           {% endfor %}
         </tbody>

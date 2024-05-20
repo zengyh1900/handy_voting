@@ -11,10 +11,10 @@ guideline: [
 
 # you need to specify the models
 models: [
-    {
-        name: 'a',
-        type: 'reference',
-    },
+    # {
+    #     name: 'a',
+    #     type: 'reference',
+    # },
     {
         name: 'b',
         type: 'target',
@@ -24,6 +24,15 @@ models: [
         type: 'baseline',
     },
 ]
+
+
+metrics: [
+  'audio quality',
+  'temporal alignment',
+  'semantic alignment'
+]
+
+
 
 
 APP_SETTINGS:

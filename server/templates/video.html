@@ -17,17 +17,17 @@
     <div class="main-container">
         <h1>{{ title }}</h1>
         <p id="tips-icon">
-          <a><i class="ui blue question circle outline large icon"></i></a>
+            <a><i class="ui blue question circle outline large icon"></i></a>
         </p>
         <div id="tips-popup" class="ui popup trainsition hidden">
-          <div class="header">Tips</div>
-          <div class="content">
-            <ol>
-                {% for i in guideline %}
-                <li>{{ i }}</li>
-                {% endfor %}
-            </ol>
-          </div>
+            <div class="header">Tips</div>
+            <div class="content">
+                <ol>
+                    {% for i in guideline %}
+                    <li>{{ i }}</li>
+                    {% endfor %}
+                </ol>
+            </div>
         </div>
         <div id="app">
             <div class="ui active centered loader" v-show="loading" key="loader"></div>
@@ -35,28 +35,45 @@
                 <div id="model-imgs" class="ui centered grid" v-show="!loading" key="images">
                     <div class="model-img ui six wide column" v-for="item in images">
                         <div class="ui blurring dimmable image" v-show="!item.isreference">
-                            <video width="320" height="240" class="ui image" :src="item.img" controls></video>
-                            <button v-on:click="sendVote(item.id)" class="ui inverted button"
-                                style="background-color: #e01e5a; color: white;">Select</button>
+                            <video class="ui image" :src="item.img" controls></video>
+                            <p v-text="item.id"></p>
                         </div>
                         <div class="ui blurring dimmable image" v-show="item.isreference">
-                            <video width="320" height="240" class="ui image" :src="item.img" controls></video>
+                            <video class="ui image" :src="item.img" controls></video>
                             <p>Reference</p>
                         </div>
                     </div>
+                    <!-- voting form -->
+                    <div>
+                        <div class="ui form" v-for="me in metrics">
+                            <form :id="'form-' + me.id">
+                                <fieldset>
+                                    <legend v-text="me.name"></legend>
+                                    <div class="option-row" v-for="item in images">
+                                        <input type="radio" :id="'option-'+item.id" :name="me.name" :value="item.id">
+                                        <label :for="'option-'+item.id" v-text="item.id"></label>
+                                    </div>
+                                </fieldset>
+                            </form>
+                        </div>
+                        <button id="submit-vote" v-on:click="sendVote" class="ui button"
+                            style="background-color: #e01e5a; color: white;">Submit Vote</button>
+                    </div>
                 </div>
             </transition>
+
         </div>
     </div>
+
 
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/axios@0.12.0/dist/axios.min.js"></script>
 
-    <script
-      src="https://code.jquery.com/jquery-3.1.1.min.js"
-      integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
-      crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.1.1.min.js"
+        integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
     <script src="static/Semantic-UI-CSS/semantic.min.js"></script>
+
+
 
     <script>
         var app = new Vue({
@@ -65,6 +82,7 @@
                 return {
                     loading: true,
                     images: [],
+                    metrics: [],
                 };
             },
             created() {
@@ -73,16 +91,17 @@
             },
             methods: {
 
-                getImages: function() {
+                getImages: function () {
                     this.loading = true;
                     var vm = this;
                     axios.get('/getimages')
                         .then(function (response) {
+                            vm.metrics = response.data.metrics
                             vm.images = response.data.imgs.map(function (item) {
                                 item.img += "?t=" + new Date().getTime();
                                 return item;
                             });
-                            console.log(vm.images);
+                            console.log(vm.metrics);
                             vm.loading = false;
                         })
                         .catch(function (error) {
@@ -91,10 +110,16 @@
                             vm.loading = false;
                         });
                 },
-                sendVote: function (choice) {
+                sendVote: function () {
                     this.loading = true
                     var vm = this
-                    axios.post('/vote', { choice: choice })
+                    var selectedOptions = [];
+                    this.metrics.forEach((metric, index) => {
+                        var formId = 'form-' + metric.id;
+                        var form = document.getElementById(formId);
+                        selectedOptions.push(form.querySelector('input[type="radio"]:checked').value);
+                    });
+                    axios.post('/vote', { 'choice': selectedOptions })
                         .then(function (response) {
                             vm.getImages();
                         })

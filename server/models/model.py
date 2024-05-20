@@ -1,4 +1,5 @@
 import enum
+import json
 
 from .. import db
 
@@ -12,9 +13,32 @@ class ModelRole(enum.Enum):
 class Model(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(80), unique=True, nullable=False)
-    vote_count = db.Column(db.Integer, nullable=False, default=0)
-    shown_count = db.Column(db.Integer, nullable=False, default=0)
     type = db.Column(db.Enum(ModelRole), nullable=False)
+    # vote_count = db.Column(db.PickleType, nullable=False, default=[0])
+    # shown_count = db.Column(db.PickleType, nullable=False, default=[0])
+    # 使用字符串类型存储序列化的整数列表
+    vote_count_list = db.Column(db.String)
+    shown_count_list = db.Column(db.String)
+
+    @property
+    def vote_count(self):
+        # 反序列化列表
+        return json.loads(self.vote_count_list)
+
+    @vote_count.setter
+    def vote_count(self, value):
+        # 序列化列表
+        self.vote_count_list = json.dumps(value)
+
+    @property
+    def shown_count(self):
+        # 反序列化列表
+        return json.loads(self.shown_count_list)
+
+    @shown_count.setter
+    def shown_count(self, value):
+        # 序列化列表
+        self.shown_count_list = json.dumps(value)
 
     @staticmethod
     def reference_models():
