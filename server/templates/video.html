@@ -50,8 +50,8 @@
                                 <fieldset>
                                     <legend v-text="me.name"></legend>
                                     <div class="option-row" v-for="item in images">
-                                        <input type="radio" :id="'option-'+item.id" :name="me.name" :value="item.id">
-                                        <label :for="'option-'+item.id" v-text="item.id"></label>
+                                        <input type="radio" :id="'option-'+item.id" :name="me.name" :value="item.id" v-show="!item.isreference">
+                                        <label :for="'option-'+item.id" v-text="item.id" v-show="!item.isreference"></label>
                                     </div>
                                 </fieldset>
                             </form>
